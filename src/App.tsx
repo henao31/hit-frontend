@@ -5,6 +5,7 @@ import Home from './pages/Home.tsx'
 import Login from './pages/auth/views/login/Login.tsx'
 import Register from './pages/auth/views/register/Register.tsx'
 import { useLogin } from './pages/auth/views/login/useLogin.ts'
+import Dashboard from './pages/Dashboard.tsx'   // <-- importa el dashboard
 
 // Declarar el tipo para window.ipcRenderer
 declare global {
@@ -23,7 +24,6 @@ function App() {
   const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    // Simular verificación de autenticación
     setTimeout(() => {
       setIsLoading(false)
     }, 500)
@@ -47,18 +47,28 @@ function App() {
   return (
     <div className="App">
       <Routes>
+        {/* Login y registro */}
         <Route 
           path="/login" 
-          element={isAuthenticated() ? <Navigate to="/" replace /> : <Login />} 
+          element={isAuthenticated() ? <Navigate to="/dashboard" replace /> : <Login />} 
         />
         <Route 
           path="/register" 
-          element={isAuthenticated() ? <Navigate to="/" replace /> : <Register />} 
+          element={isAuthenticated() ? <Navigate to="/dashboard" replace /> : <Register />} 
         />
+
+        {/* Rutas protegidas */}
+        <Route 
+          path="/dashboard/*" 
+          element={isAuthenticated() ? <Dashboard /> : <Navigate to="/login" replace />} 
+        />
+
+        {/* Si ponen "/" los mando al dashboard si están logueados */}
         <Route 
           path="/" 
-          element={isAuthenticated() ? <Home /> : <Navigate to="/login" replace />} 
+          element={isAuthenticated() ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />} 
         />
+
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </div>

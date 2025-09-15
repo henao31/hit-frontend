@@ -1,6 +1,6 @@
-import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-
+import { useNavigate } from "react-router-dom"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
 
 interface LoginFormData {
   email: string
@@ -8,9 +8,9 @@ interface LoginFormData {
   remember: boolean
 }
 
-
 export const useLogin = () => {
   const [error, setError] = useState<string | null>(null)
+  const navigate = useNavigate() // ✅ usar navegación de React Router
   const {
     register,
     handleSubmit,
@@ -35,20 +35,16 @@ export const useLogin = () => {
     setError(null)
 
     try {
-      // Simular una llamada a la API
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      // Aquí iría la lógica real de autenticación
-      // Por ejemplo: const response = await api.post('/auth/login', { email, password })
-      
-      // Simular validación básica
+      // Simular delay de API
+      await new Promise(resolve => setTimeout(resolve, 1000))
+
+      // Validación simulada
       if (email === 'admin@test.com' && password === 'password') {
-        // Simular almacenamiento del token
         localStorage.setItem('authToken', 'fake-jwt-token')
         localStorage.setItem('user', JSON.stringify({ email, name: 'Usuario Admin' }))
         
-        // Redirigir o actualizar el estado de la aplicación
-        window.location.href = '/'
+        // ✅ Navegación interna (sin recargar la app)
+        navigate("/")
       } else {
         throw new Error('Credenciales inválidas')
       }
@@ -62,7 +58,7 @@ export const useLogin = () => {
   const logout = () => {
     localStorage.removeItem('authToken')
     localStorage.removeItem('user')
-    window.location.href = '/login'
+    navigate("/login")
   }
 
   const isAuthenticated = () => {
