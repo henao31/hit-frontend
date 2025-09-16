@@ -8,7 +8,7 @@ interface Membresia {
   fechaFin: string;
 }
 
-export default function Membresias() {
+export default function Memberships() {
   const [tab, setTab] = useState<
     "dia" | "semana" | "quincena" | "mes" | "tiquetera"
   >("dia");

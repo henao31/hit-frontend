@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
-import { useState } from "react"
 import { useForm } from "react-hook-form"
+import { toast } from "sonner"
 
 interface LoginFormData {
   email: string
@@ -9,7 +9,6 @@ interface LoginFormData {
 }
 
 export const useLogin = () => {
-  const [error, setError] = useState<string | null>(null)
   const navigate = useNavigate() // ✅ usar navegación de React Router
   const {
     register,
@@ -25,55 +24,20 @@ export const useLogin = () => {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      await login(data.email, data.password)
+      console.log(data)
+      navigate("/")
+
+      toast.success('Login exitoso')
     } catch (error) {
       console.error('Error en el login:', error)
     }
   }
 
-  const login = async (email: string, password: string): Promise<void> => {
-    setError(null)
-
-    try {
-      // Simular delay de API
-      await new Promise(resolve => setTimeout(resolve, 1000))
-
-      // Validación simulada
-      if (email === 'admin@test.com' && password === 'password') {
-        localStorage.setItem('authToken', 'fake-jwt-token')
-        localStorage.setItem('user', JSON.stringify({ email, name: 'Usuario Admin' }))
-        
-        // ✅ Navegación interna (sin recargar la app)
-        navigate("/")
-      } else {
-        throw new Error('Credenciales inválidas')
-      }
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Error al iniciar sesión'
-      setError(errorMessage)
-      throw err
-    }
-  }
-
-  const logout = () => {
-    localStorage.removeItem('authToken')
-    localStorage.removeItem('user')
-    navigate("/login")
-  }
-
-  const isAuthenticated = () => {
-    return !!localStorage.getItem('authToken')
-  }
-
   return {
-    login,
-    logout,
-    isAuthenticated,
-    error,
-    register,
-    handleSubmit,
-    errors,
-    isSubmitting,
+    handleSubmit, 
+    register, 
+    errors, 
+    isSubmitting, 
     onSubmit
   }
 }
