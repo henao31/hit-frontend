@@ -1,94 +1,169 @@
 import React, { useState } from "react";
 
-// Definimos el tipo de usuario según tu tabla
 interface Usuario {
-  idUsuario: number;
+  id_usuario?: number;
   nombre: string;
   cedula: string;
-  fechaNacimiento: string;
+  fecha_nacimiento: string;
   telefono: string;
   objetivo: string;
-  idGimnasio: number;
+  id_gimnasio: number;
+  membresia?: string;
+  entrenador?: string;
+}
+
+interface Membresia {
+  id: string;
+  nombre: string;
+  requiereEntrenador: boolean;
+}
+
+interface Entrenador {
+  id: string;
+  nombre: string;
 }
 
 export default function Usuarios() {
-  const [usuarios, setUsuarios] = useState<Usuario[]>([
-    {
-      idUsuario: 1,
-      nombre: "Juan Pérez",
-      cedula: "12345678",
-      fechaNacimiento: "1995-05-21",
-      telefono: "321654987",
-      objetivo: "Perder peso",
-      idGimnasio: 10,
-    },
-  ]);
-
+  const [usuarios, setUsuarios] = useState<Usuario[]>([]);
+  const [formData, setFormData] = useState<Usuario>({
+    nombre: "",
+    cedula: "",
+    fecha_nacimiento: "",
+    telefono: "",
+    objetivo: "",
+    id_gimnasio: 1,
+    membresia: "dia",
+    entrenador: "",
+  });
   const [editando, setEditando] = useState<Usuario | null>(null);
   const [open, setOpen] = useState(false);
 
-  // Abrir modal en modo edición
-  const handleEditar = (usuario: Usuario) => {
-    setEditando(usuario);
-    setOpen(true);
+  // Membresías
+  const membresias: Membresia[] = [
+    { id: "dia", nombre: "Uso de Maquinas (Día)", requiereEntrenador: false },
+    { id: "semana", nombre: "Membresía Semana", requiereEntrenador: true },
+    { id: "quincena", nombre: "Membresía Quincena", requiereEntrenador: true },
+    { id: "mes", nombre: "Membresía Mes", requiereEntrenador: true },
+    { id: "tiquetera", nombre: "Tiquetera 10 Días", requiereEntrenador: false },
+  ];
+
+  // Entrenadores
+  const entrenadores: Entrenador[] = [
+    { id: "e1", nombre: "Juan Pérez" },
+    { id: "e2", nombre: "María Gómez" },
+    { id: "e3", nombre: "Carlos Rodríguez" },
+  ];
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Eliminar usuario
-  const handleEliminar = (id: number) => {
-    if (confirm(`¿Seguro que deseas eliminar el usuario con ID: ${id}?`)) {
-      setUsuarios((prev) => prev.filter((u) => u.idUsuario !== id));
+  const handleGuardar = async () => {
+    try {
+      if (editando) {
+        setUsuarios(
+          usuarios.map((u) => (u.id_usuario === editando.id_usuario ? formData : u))
+        );
+      } else {
+        const nuevoUsuario = { ...formData, id_usuario: Date.now() };
+        setUsuarios([...usuarios, nuevoUsuario]);
+      }
+      setOpen(false);
+      setFormData({
+        nombre: "",
+        cedula: "",
+        fecha_nacimiento: "",
+        telefono: "",
+        objetivo: "",
+        id_gimnasio: 1,
+        membresia: "dia",
+        entrenador: "",
+      });
+      setEditando(null);
+    } catch (error) {
+      console.error(error);
+      alert("No se pudo guardar el usuario");
     }
   };
 
+  const handleEditar = (usuario: Usuario) => {
+    setEditando(usuario);
+    setFormData(usuario);
+    setOpen(true);
+  };
+
+  const handleEliminar = (usuario: Usuario) => {
+    if (window.confirm(`¿Deseas eliminar a ${usuario.nombre}?`)) {
+      setUsuarios(usuarios.filter((u) => u.id_usuario !== usuario.id_usuario));
+    }
+  };
+
+  // Determinar si la membresía seleccionada requiere entrenador
+  const membresiaSeleccionada = membresias.find((m) => m.id === formData.membresia);
+
   return (
     <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4">Usuarios</h2>
+      <h2 className="text-2xl font-bold mb-4 text-green-600">Usuarios</h2>
 
-      {/* Botón nuevo usuario */}
       <button
         onClick={() => {
           setEditando(null);
+          setFormData({
+            nombre: "",
+            cedula: "",
+            fecha_nacimiento: "",
+            telefono: "",
+            objetivo: "",
+            id_gimnasio: 1,
+            membresia: "dia",
+            entrenador: "",
+          });
           setOpen(true);
         }}
-        className="bg-cyan-600 text-white px-4 py-2 rounded mb-4 hover:bg-cyan-700"
+        className="bg-green-500 text-white px-4 py-2 rounded mb-4 hover:bg-green-600 transition"
       >
         + Nuevo Usuario
       </button>
 
-      {/* Tabla de usuarios */}
-      <table className="w-full border-collapse">
-        <thead>
-          <tr className="bg-gray-800 text-white">
+      {/* Tabla */}
+      <table className="w-full border-collapse rounded-lg overflow-hidden shadow-sm bg-white">
+        <thead className="bg-green-500 text-white">
+          <tr>
             <th className="p-2 border">ID</th>
             <th className="p-2 border">Nombre</th>
             <th className="p-2 border">Cédula</th>
             <th className="p-2 border">Fecha Nacimiento</th>
             <th className="p-2 border">Teléfono</th>
             <th className="p-2 border">Objetivo</th>
-            <th className="p-2 border">ID Gimnasio</th>
+            <th className="p-2 border">Gimnasio</th>
+            <th className="p-2 border">Membresía</th>
+            <th className="p-2 border">Entrenador</th>
             <th className="p-2 border">Acciones</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody className="text-gray-700">
           {usuarios.map((u) => (
-            <tr key={u.idUsuario} className="text-center">
-              <td className="border p-2">{u.idUsuario}</td>
+            <tr key={u.id_usuario} className="text-center hover:bg-gray-50 transition">
+              <td className="border p-2">{u.id_usuario}</td>
               <td className="border p-2">{u.nombre}</td>
               <td className="border p-2">{u.cedula}</td>
-              <td className="border p-2">{u.fechaNacimiento}</td>
+              <td className="border p-2">{u.fecha_nacimiento}</td>
               <td className="border p-2">{u.telefono}</td>
               <td className="border p-2">{u.objetivo}</td>
-              <td className="border p-2">{u.idGimnasio}</td>
-              <td className="border p-2">
+              <td className="border p-2">{u.id_gimnasio}</td>
+              <td className="border p-2">{u.membresia}</td>
+              <td className="border p-2">{u.entrenador || "-"}</td>
+              <td className="border p-2 flex justify-center gap-2">
                 <button
                   onClick={() => handleEditar(u)}
-                  className="bg-blue-600 text-white px-3 py-1 rounded mr-2 hover:bg-blue-700"
+                  className="bg-green-500 px-3 py-1 rounded text-white hover:bg-green-600 transition"
                 >
                   Editar
                 </button>
                 <button
-                  onClick={() => handleEliminar(u.idUsuario)}
-                  className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
+                  onClick={() => handleEliminar(u)}
+                  className="bg-red-500 px-3 py-1 rounded text-white hover:bg-red-600 transition"
                 >
                   Eliminar
                 </button>
@@ -101,7 +176,7 @@ export default function Usuarios() {
       {/* Modal */}
       {open && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-gray-900 text-white p-6 rounded-lg w-1/2">
+          <div className="bg-gray-900 text-white p-6 rounded-xl w-1/2 shadow-lg max-h-[90vh] overflow-auto">
             <h3 className="text-xl font-semibold mb-4">
               {editando ? "Editar Usuario" : "Nuevo Usuario"}
             </h3>
@@ -109,53 +184,96 @@ export default function Usuarios() {
             <div className="grid grid-cols-2 gap-4">
               <input
                 type="text"
-                value={editando?.nombre ?? ""}
-                readOnly
+                name="nombre"
+                value={formData.nombre}
+                onChange={handleChange}
                 placeholder="Nombre"
                 className="p-2 rounded bg-gray-800 w-full"
               />
               <input
                 type="text"
-                value={editando?.cedula ?? ""}
-                readOnly
+                name="cedula"
+                value={formData.cedula}
+                onChange={handleChange}
                 placeholder="Cédula"
                 className="p-2 rounded bg-gray-800 w-full"
               />
               <input
                 type="date"
-                value={editando?.fechaNacimiento ?? ""}
-                readOnly
+                name="fecha_nacimiento"
+                value={formData.fecha_nacimiento}
+                onChange={handleChange}
                 className="p-2 rounded bg-gray-800 w-full"
               />
               <input
                 type="text"
-                value={editando?.telefono ?? ""}
-                readOnly
+                name="telefono"
+                value={formData.telefono}
+                onChange={handleChange}
                 placeholder="Teléfono"
                 className="p-2 rounded bg-gray-800 w-full"
               />
               <input
                 type="text"
-                value={editando?.objetivo ?? ""}
-                readOnly
+                name="objetivo"
+                value={formData.objetivo}
+                onChange={handleChange}
                 placeholder="Objetivo"
                 className="p-2 rounded bg-gray-800 w-full col-span-2"
               />
               <input
                 type="number"
-                value={editando?.idGimnasio ?? ""}
-                readOnly
+                name="id_gimnasio"
+                value={formData.id_gimnasio}
+                onChange={handleChange}
                 placeholder="ID Gimnasio"
                 className="p-2 rounded bg-gray-800 w-full col-span-2"
               />
+
+              {/* Membresía */}
+              <select
+                name="membresia"
+                value={formData.membresia}
+                onChange={handleChange}
+                className="p-2 rounded bg-gray-800 w-full col-span-2"
+              >
+                {membresias.map((m) => (
+                  <option key={m.id} value={m.id}>
+                    {m.nombre}
+                  </option>
+                ))}
+              </select>
+
+              {/* Entrenador: solo si la membresía lo requiere */}
+              {membresiaSeleccionada?.requiereEntrenador && (
+                <select
+                  name="entrenador"
+                  value={formData.entrenador || ""}
+                  onChange={handleChange}
+                  className="p-2 rounded bg-gray-800 w-full col-span-2"
+                >
+                  <option value="">Seleccionar Entrenador</option>
+                  {entrenadores.map((t) => (
+                    <option key={t.id} value={t.nombre}>
+                      {t.nombre}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
 
             <div className="flex justify-end mt-6">
               <button
                 onClick={() => setOpen(false)}
-                className="bg-gray-600 px-4 py-2 rounded mr-2 hover:bg-gray-700"
+                className="bg-gray-700 px-4 py-2 rounded mr-2 hover:bg-gray-600 transition"
               >
-                Cerrar
+                Cancelar
+              </button>
+              <button
+                onClick={handleGuardar}
+                className="bg-green-500 px-4 py-2 rounded hover:bg-green-600 transition"
+              >
+                Guardar
               </button>
             </div>
           </div>
