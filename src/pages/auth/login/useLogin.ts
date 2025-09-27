@@ -24,9 +24,10 @@ export const useLogin = () => {
   const onSubmit = async (data: LoginFormData) => {
     try {
       console.log("hoola mundo")
+      console.log(data.correo)
       await login(data.correo, data.contrasena)
-      toast.success('Login exitoso')
       navigate("/")
+      toast.success('Login exitoso')
     } catch (error) {
       console.error('Error en el login:', error)
       toast.error(error as string)
