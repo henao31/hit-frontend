@@ -40,7 +40,7 @@ const Login = () => {
                 <input
                   id="email"
                   type="email"
-                  {...register('email', {
+                  {...register('correo', {
                     required: 'El correo electrónico es requerido',
                     pattern: {
                       value: /\S+@\S+\.\S+/,
@@ -48,7 +48,7 @@ const Login = () => {
                     }
                   })}
                   className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none ${
-                    errors.email ? 'border-red-300' : 'border-slate-300'
+                    errors.correo ? 'border-red-300' : 'border-slate-300'
                   }`}
                   placeholder="tu@email.com"
                 />
@@ -58,8 +58,8 @@ const Login = () => {
                   </svg>
                 </div>
               </div>
-              {errors.email && (
-                <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+              {errors.correo && (
+                <p className="mt-1 text-sm text-red-600">{errors.correo.message}</p>
               )}
             </div>
 
@@ -72,7 +72,7 @@ const Login = () => {
                 <input
                   id="password"
                   type="password"
-                  {...register('password', {
+                  {...register('contrasena', {
                     required: 'La contraseña es requerida',
                     minLength: {
                       value: 6,
@@ -80,7 +80,7 @@ const Login = () => {
                     }
                   })}
                   className={`w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 outline-none ${
-                    errors.password ? 'border-red-300' : 'border-slate-300'
+                    errors.contrasena ? 'border-red-300' : 'border-slate-300'
                   }`}
                   placeholder="••••••••"
                 />
@@ -91,23 +91,15 @@ const Login = () => {
                   </svg>
                 </div>
               </div>
-              {errors.password && (
-                <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+              {errors.contrasena && (
+                <p className="mt-1 text-sm text-red-600">{errors.contrasena.message}</p>
               )}
             </div>
 
             {/* Recordar contraseña */}
             <div className="flex items-center justify-between">
               <div className="flex items-center">
-                <input
-                  id="remember"
-                  type="checkbox"
-                  {...register('remember')}
-                  className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded"
-                />
-                <label htmlFor="remember" className="ml-2 block text-sm text-slate-700">
-                  Recordarme
-                </label>
+                
               </div>
               <a href="#" className="text-sm text-blue-600 hover:text-blue-500 transition-colors">
                 ¿Olvidaste tu contraseña?

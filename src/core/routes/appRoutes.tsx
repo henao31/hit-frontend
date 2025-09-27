@@ -4,8 +4,8 @@ import PrivateLayout from '../../components/PrivateLayout';
 
 // Lazy loading para optimizar el rendimiento
 //auth views
-const Register = lazy(() => import('../../pages/auth/views/register/Register'));
-const Login = lazy(() => import('../../pages/auth/views/login/Login'));
+const Register = lazy(() => import('../../pages/auth/register/Register'));
+const Login = lazy(() => import('../../pages/auth/login/Login'));
 //backoffice views
 const Usuarios = lazy(() => import('../../pages/backoffice/users/Usuarios'));
 const Empleados = lazy(() => import('../../pages/backoffice/employe/Empleados'));

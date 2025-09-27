@@ -1,11 +1,11 @@
 import { useNavigate } from "react-router-dom"
 import { useForm } from "react-hook-form"
 import { toast } from "sonner"
+import { login } from "../../../core/services/auth.service"
 
 interface LoginFormData {
-  email: string
-  password: string
-  remember: boolean
+  correo: string
+  contrasena: string
 }
 
 export const useLogin = () => {
@@ -16,20 +16,20 @@ export const useLogin = () => {
     formState: { errors, isSubmitting }
   } = useForm<LoginFormData>({
     defaultValues: {
-      email: '',
-      password: '',
-      remember: false
+      correo: '',
+      contrasena: '',
     }
   })
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      console.log(data)
-      navigate("/")
-
+      console.log("hoola mundo")
+      await login(data.correo, data.contrasena)
       toast.success('Login exitoso')
+      navigate("/")
     } catch (error) {
       console.error('Error en el login:', error)
+      toast.error(error as string)
     }
   }
 
