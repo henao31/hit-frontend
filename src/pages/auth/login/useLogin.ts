@@ -23,7 +23,7 @@ export const useLogin = () => {
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      console.log(data)
+      console.log("hoola mundo")
       await login(data.correo, data.contrasena)
       toast.success('Login exitoso')
       navigate("/")
