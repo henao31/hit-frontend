@@ -12,6 +12,7 @@ const Empleados = lazy(() => import('../../pages/backoffice/employe/Empleados'))
 const Membresias = lazy(() => import('../../pages/backoffice/memberships/Memberships'));
 const Caja = lazy(() => import('../../pages/Caja'));
 const Reportes = lazy(() => import('../../pages/Reportes'));
+const Access = lazy(() => import('../../pages/backoffice/access/access'));
 
 //backoffice views
 export const appRoutes: RouteObject[] = [
@@ -58,6 +59,10 @@ export const appRoutes: RouteObject[] = [
       {
         path: 'reportes',
         element: <Reportes />
+      },
+      {
+        path: 'acceso',
+        element: <Access />
       }
     ]
   },

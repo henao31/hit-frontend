@@ -46,7 +46,8 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.62.0",
     "react-router-dom": "^7.9.1",
-    "sonner": "^2.0.7"
+    "sonner": "^2.0.7",
+    "zustand": "^5.0.8"
   },
   "build": {
     "appId": "com.ejemplo.react-electron-vite",

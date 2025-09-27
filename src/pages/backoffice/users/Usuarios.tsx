@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 
+
 // Definimos el tipo de usuario según tu tabla
 interface Usuario {
   idUsuario: number;
@@ -12,6 +13,8 @@ interface Usuario {
 }
 
 export default function Usuarios() {
+  
+
   const [usuarios, setUsuarios] = useState<Usuario[]>([
     {
       idUsuario: 1,
@@ -23,6 +26,7 @@ export default function Usuarios() {
       idGimnasio: 10,
     },
   ]);
+
 
   const [editando, setEditando] = useState<Usuario | null>(null);
   const [open, setOpen] = useState(false);

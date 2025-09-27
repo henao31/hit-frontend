@@ -1,4 +1,4 @@
-import { ChartBar, CreditCard, Users, UserCheck, Wallet } from "lucide-react";
+import { ChartBar, CreditCard, Lock, Users, UserCheck, Wallet } from "lucide-react";
 
 export interface Module {
   id: number;
@@ -44,6 +44,13 @@ export const modules: Module[] = [
     path: '/reportes',
     icon: ChartBar,
     roles: ['admin', 'manager']
+  },
+  {
+    id: 6,
+    name: 'Acceso',
+    path: '/acceso',
+    icon: Lock,
+    roles: ['admin', 'manager', 'employee']
   }
 ];
 

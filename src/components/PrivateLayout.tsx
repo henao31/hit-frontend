@@ -1,18 +1,20 @@
 import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { getModulesByRole } from "../core/config/modules";
+import { useUser, useLogout } from "../core/store";
 
 
 export default function PrivateLayout() {
   const navigate = useNavigate();
   const location = useLocation();
+  const user = useUser();
+  const logout = useLogout();
   const [activeModule, setActiveModule] = useState<number>(1);
   const [userModules, setUserModules] = useState<any[]>([]);
 
   useEffect(() => {
-    // Obtener el rol del usuario desde localStorage
-    const user = JSON.parse(localStorage.getItem('user') || '{}');
-    const userRole = user?.user_metadata?.role || 'admin';
+    // Obtener el rol del usuario desde el store
+    const userRole = 'admin'; // Por ahora hardcodeado, puedes agregar role al store si es necesario
     
     // Obtener módulos según el rol del usuario
     const modules = getModulesByRole(userRole);
@@ -47,11 +49,11 @@ export default function PrivateLayout() {
           </div>
           <div className="flex items-center gap-4">
             <span className="text-lg text-gray-600">
-              Bienvenido, {JSON.parse(localStorage.getItem('user') || '{}')?.user_metadata?.email || 'Usuario'}
+              Bienvenido, {user?.nombre || 'Usuario'}
             </span>
             <button
               onClick={() => {
-                localStorage.removeItem('user');
+                logout();
                 navigate("/login");
               }}
               className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition-colors duration-200 flex items-center gap-2"
